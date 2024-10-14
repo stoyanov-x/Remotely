@@ -104,15 +104,17 @@ public class ScriptingController : ControllerBase
             command,
             User?.Identity?.Name ?? "API Key");
 
-        var success = await WaitHelper.WaitForAsync(() => AgentHub.ApiScriptResults.TryGetValue(requestID, out _), TimeSpan.FromSeconds(30));
+        var success = await WaitHelper.WaitForAsync(
+            () => AgentHub.ApiScriptResults.TryGetValue(requestID, out _),
+            TimeSpan.FromSeconds(30)); // TODO
         if (!success)
         {
             return NotFound();
         }
-        AgentHub.ApiScriptResults.TryGetValue(requestID, out var commandId);
+        AgentHub.ApiScriptResults.TryGetValue(requestID, out var resultId);
         AgentHub.ApiScriptResults.Remove(requestID);
 
-        var scriptResult = await _dataService.GetScriptResult($"{commandId}", orgId);
+        var scriptResult = await _dataService.GetScriptResult($"{resultId}", orgId);
         if (!scriptResult.IsSuccess)
         {
             return NotFound();
