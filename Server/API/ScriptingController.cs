@@ -111,10 +111,10 @@ public class ScriptingController : ControllerBase
         {
             return NotFound();
         }
-        AgentHub.ApiScriptResults.TryGetValue(requestID, out var commandId);
+        AgentHub.ApiScriptResults.TryGetValue(requestID, out var resultId);
         AgentHub.ApiScriptResults.Remove(requestID);
 
-        var scriptResult = await _dataService.GetScriptResult($"{commandId}", orgId);
+        var scriptResult = await _dataService.GetScriptResult($"{resultId}", orgId);
         if (!scriptResult.IsSuccess)
         {
             return NotFound();
